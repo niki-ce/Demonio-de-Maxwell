@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>El demonio de Maxwell y la segunda ley</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400&family=Archivo:wght@500;700;800&display=swap">
+<style>
+:root{--bg:#f2f4f7;--surf:#ffffff;--ink:#14202e;--mut:#5a6878;--line:#cdd5de;--acc:#c8372d;--cool:#2f6fb5;--hot:#c8372d;--navbg:#f2f4f7;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1722;--surf:#172231;--ink:#e8edf3;--mut:#93a1b2;--line:#2a3a4e;--acc:#ff6a5c;--cool:#6aaeff;--hot:#ff6a5c;--navbg:#0f1722;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1722;--surf:#172231;--ink:#e8edf3;--mut:#93a1b2;--line:#2a3a4e;--acc:#ff6a5c;--cool:#6aaeff;--hot:#ff6a5c;--navbg:#0f1722;color-scheme:dark}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 56px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.65 "Newsreader",Georgia,serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--navbg);z-index:10}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--navbg);border-bottom:1px solid var(--line);display:flex;gap:4px;overflow-x:auto;padding:8px 16px;font:600 14px "Archivo",system-ui,sans-serif}
+nav a{color:var(--mut);text-decoration:none;padding:6px 12px;border-radius:99px;white-space:nowrap}
+nav a:hover,nav a:focus-visible{color:var(--ink);background:var(--surf);outline:2px solid var(--cool)}
+main{max-width:980px;margin:0 auto;padding:0 20px 80px}
+h1,h2,h3{font-family:"Archivo",system-ui,sans-serif;line-height:1.1;margin:0}
+h1{font-size:clamp(40px,8vw,84px);font-weight:800;letter-spacing:-.03em}
+h2{font-size:clamp(28px,4.5vw,40px);font-weight:800;letter-spacing:-.02em;margin-bottom:18px}
+h3{font-size:19px;font-weight:700;margin-bottom:6px}
+p{max-width:68ch;margin:0 0 14px}
+section{padding:56px 0;border-top:1px solid var(--line)}
+.hero{border:0;padding-top:36px}
+.sub{color:var(--mut);font-size:20px;max-width:56ch}
+.pill{font:600 13px "Archivo",system-ui,sans-serif;background:var(--surf);border:1px solid var(--line);border-radius:99px;padding:3px 12px;color:var(--mut);display:inline-block;margin:0 6px 6px 0}
+.sim{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:28px}
+canvas{width:100%;height:auto;display:block;border-radius:8px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px;font:600 14px "Archivo",system-ui,sans-serif;color:var(--mut)}
+button{font:700 14px "Archivo",system-ui,sans-serif;background:var(--ink);color:var(--bg);border:0;border-radius:8px;padding:9px 16px;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid var(--cool);outline-offset:2px}
+.tl{list-style:none;margin:0;padding:0 0 0 22px;border-left:3px solid var(--line)}
+.tl li{position:relative;padding:0 0 18px 18px}
+.tl li::before{content:"";position:absolute;left:-30px;top:9px;width:13px;height:13px;border-radius:50%;background:var(--acc)}
+.tl b{font:800 20px "Archivo",system-ui,sans-serif;margin-right:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card small{color:var(--mut);display:block;font:600 13px "Archivo",system-ui,sans-serif;margin-bottom:4px}
+.card p{font-size:16px;line-height:1.5;margin:0}
+.quote{border-left:4px solid var(--acc);padding:4px 0 4px 18px;font-style:italic;max-width:62ch;margin:0 0 14px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:16px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:700 14px "Archivo",system-ui,sans-serif;color:var(--mut)}
+.calc{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:18px}
+.big{font:800 clamp(28px,5vw,44px) "Archivo",system-ui,sans-serif;color:var(--acc)}
+input[type=range]{width:100%;accent-color:var(--acc)}
+footer{padding:30px 0;color:var(--mut);font-size:15px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav aria-label="Secciones"><a href="#inicio">Inicio</a><a href="#episodio">Episodio</a><a href="#fuente">Fuente</a><a href="#actores">Protagonistas</a><a href="#ciencia">Ciencia</a><a href="#debate">Debate</a><a href="#revolucion">¿Revolución?</a></nav>
+<main>
+<section class="hero" id="inicio">
+<span class="pill">Revolucions en Física i Matemàtiques · URV</span><span class="pill">El Festival · Fase 1</span>
+<h1>El demonio de Maxwell y la segunda ley</h1>
+<p class="sub">Un portero diminuto, una caja de gas y más de un siglo de discusión: ¿puede la información violar la termodinámica?</p>
+<div class="sim"><canvas id="cv" width="960" height="360" aria-label="Simulación de dos cámaras con un demonio que clasifica moléculas rápidas y lentas"></canvas>
+<div class="row"><button id="tg" type="button">Activar el demonio</button><span>Rojas: rápidas · Azules: lentas</span><span id="st"></span></div></div>
+</section>
+
+<section id="episodio">
+<h2>El episodio y la tesis de Bennett</h2>
+<p>En 1867 Maxwell planteó a su amigo Tait un enigma: una caja de gas dividida por una puerta diminuta y un ser capaz de ver cada molécula. Si deja pasar las rápidas a un lado y las lentas al otro, un lado se calienta y el otro se enfría sin gastar trabajo, en contradicción con la segunda ley.</p>
+<p>Charles Bennett, físico de IBM, defendió en <i>Demons, Engines and the Second Law</i> (Scientific American, 1987) que el demonio no viola la ley porque, para observar, tiene que olvidar: <strong>el coste no está en medir, sino en borrar la memoria</strong>. Bennett es además uno de los protagonistas de la historia que cuenta.</p>
+<ol class="tl" aria-label="Línea temporal">
+<li><b>1867</b>Carta de Maxwell a Tait</li><li><b>1871</b>Theory of Heat: Maxwell lo hace público</li><li><b>1874</b>Thomson (Kelvin) lo bautiza «demonio»</li><li><b>1912</b>Smoluchowski y la trampilla</li><li><b>1929</b>Szilard y su motor de una molécula</li><li><b>1961</b>Landauer y el coste de borrar</li><li><b>1982</b>Bennett propone la solución</li><li><b>1987</b>El artículo en Scientific American</li><li><b>2012</b>Bérut et al. verifican el principio de Landauer</li>
+</ol>
+</section>
+
+<section id="fuente">
+<h2>La fuente original</h2>
+<p>Maxwell describe un «ser» finito, como nosotros, capaz de seguir cada molécula. La palabra «demonio» no es suya: la usa Thomson en 1874.</p>
+<blockquote class="quote">“…a being whose faculties are so sharpened that he can follow every molecule in its course… would be able to do what is at present impossible to us.”<br><small>J. C. Maxwell, Theory of Heat (1871)</small></blockquote>
+<p>Traducción propia: un ser cuyas facultades están tan afinadas que puede seguir cada molécula en su trayectoria sería capaz de hacer lo que hoy nos es imposible.</p>
+</section>
+
+<section id="actores">
+<h2>Quién hizo qué</h2>
+<div class="grid">
+<div class="card"><small>1867 · 1871</small><h3>Maxwell</h3><p>Plantea el problema.</p></div>
+<div class="card"><small>1874</small><h3>Thomson (Kelvin)</h3><p>Bautiza al «demonio».</p></div>
+<div class="card"><small>1912</small><h3>Smoluchowski</h3><p>Una trampilla mecánica se agita térmicamente y no puede funcionar.</p></div>
+<div class="card"><small>1929</small><h3>Szilard</h3><p>Motor de una molécula; sospecha que medir cuesta entropía.</p></div>
+<div class="card"><small>siglo XX</small><h3>Brillouin y Gabor</h3><p>Intentan justificarlo con fotones.</p></div>
+<div class="card"><small>1961 · IBM</small><h3>Landauer</h3><p>Borrar información disipa calor.</p></div>
+<div class="card"><small>años 70 · MIT</small><h3>Fredkin</h3><p>Computación reversible.</p></div>
+<div class="card"><small>1982 · IBM</small><h3>Bennett</h3><p>Une los hilos: medir puede ser reversible; borrar no.</p></div>
+</div>
+</section>
+
+<section id="ciencia">
+<h2>La ciencia de dentro</h2>
+<p>En el motor de Szilard, una molécula en un cilindro se atrapa a un lado con un tabique, se mide y se anota en memoria (L o R), se acopla un pistón y la expansión isoterma extrae trabajo del calor del entorno. Para repetir el ciclo hay que borrar la memoria.</p>
+<p>Landauer: borrar un bit disipa al menos <strong>kT ln 2</strong> de calor. Es justo el trabajo que ganó el motor.</p>
+<div class="calc"><label for="T">Temperatura: <b id="tv">300</b> K</label>
+<input id="T" type="range" min="1" max="600" value="300">
+<div class="big" id="out"></div><div style="color:var(--mut);font-size:15px">Energía mínima disipada al borrar un bit (k = 1,380649×10⁻²³ J/K).</div></div>
+</section>
+
+<section id="debate">
+<h2>El debate</h2>
+<div class="tw"><table>
+<thead><tr><th>Autor</th><th>Año</th><th>Qué defiende</th></tr></thead>
+<tbody>
+<tr><td>Szilard, Brillouin, Gabor</td><td>1929 →</td><td>El coste está en la medida.</td></tr>
+<tr><td>Landauer, Bennett</td><td>1961–1987</td><td>El coste está en borrar la memoria.</td></tr>
+<tr><td>Earman y Norton</td><td>1998–1999</td><td>Dilema: si el demonio ya obedece la segunda ley, no hace falta ningún coste informacional; si no la obedece, ninguno la salva.</td></tr>
+<tr><td>Bennett</td><td>2003</td><td>Reconoce la objeción; el principio de Landauer es en cierto sentido consecuencia de la segunda ley, pero tiene gran valor explicativo.</td></tr>
+<tr><td>Bérut et al.</td><td>2012</td><td>Primera medida experimental del límite de Landauer (Nature 483:187).</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="revolucion">
+<h2>¿Fue una revolución?</h2>
+<p>No en el sentido de Kuhn, porque la segunda ley no cayó; sí como cambio conceptual profundo y acumulativo que unió entropía, información y computación.</p>
+</section>
+
+<footer>Fuente de referencia: C. H. Bennett, “Demons, Engines and the Second Law”, Scientific American 257(5):108-116, noviembre de 1987.</footer>
+</main>
+<script>
+(function(){
+var cv=document.getElementById('cv'),c=cv.getContext('2d'),W=960,H=360,wx=480,g0=140,g1=220,on=false,P=[],i;
+function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+for(i=0;i<50;i++){var s=1.2+Math.random()*3.6,a=Math.random()*6.28;P.push({x:20+Math.random()*920,y:20+Math.random()*320,vx:s*Math.cos(a),vy:s*Math.sin(a),s:s})}
+function ok(p,left){return left?(p.vx>0&&p.s>2.8):(p.vx<0&&p.s<=2.8)}
+function step(){P.forEach(function(p){var ox=p.x;p.x+=p.vx;p.y+=p.vy;if(p.x<6||p.x>W-6)p.vx*=-1;if(p.y<6||p.y>H-6)p.vy*=-1;
+if((ox<wx)!=(p.x<wx)){var inGap=p.y>g0&&p.y<g1;if(!(on&&inGap&&ok(p,ox<wx))){p.x=ox;p.vx*=-1}}})}
+function draw(){step();c.clearRect(0,0,W,H);var hot=css('--hot'),cool=css('--cool'),ink=css('--ink');
+P.forEach(function(p){c.fillStyle=p.s>2.8?hot:cool;c.beginPath();c.arc(p.x,p.y,5,0,6.28);c.fill()});
+c.strokeStyle=ink;c.lineWidth=3;c.strokeRect(2,2,W-4,H-4);c.beginPath();c.moveTo(wx,2);c.lineTo(wx,g0);c.moveTo(wx,g1);c.lineTo(wx,H-2);c.stroke();
+c.strokeStyle=on?css('--acc'):ink;c.beginPath();c.moveTo(wx,g0);c.lineTo(wx,g1);c.stroke();
+var L=P.filter(function(p){return p.x<wx}).length;document.getElementById('st').textContent='A: '+L+' · B: '+(P.length-L)+' moléculas';
+requestAnimationFrame(draw)}
+var rm=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+document.getElementById('tg').onclick=function(){on=!on;this.textContent=on?'Desactivar el demonio':'Activar el demonio'};
+if(rm){step();draw=function(){}}else draw();
+var T=document.getElementById('T');function calc(){var t=+T.value;document.getElementById('tv').textContent=t;document.getElementById('out').textContent=(1.380649e-23*t*Math.LN2*1e21).toFixed(2)+' × 10⁻²¹ J'}
+T.oninput=calc;calc();
+})();
+</script>
+</body>
+</html>
